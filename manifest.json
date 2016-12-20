@@ -1,5 +1,4 @@
 {
-
   "description": "Remove the redirect page from Facebook's external links",
   "manifest_version": 2,
   "name": "Facebook Direct Links",
@@ -8,10 +7,9 @@
   "icons": {
     "48": "icons/fb-48.png"
   },
-
   "content_scripts": [
     {
-      "matches": ["*://*.facebook.com*"],
+      "matches": ["*://*.facebook.com/*"],
       "js": ["direct.js"]
     }
   ]
