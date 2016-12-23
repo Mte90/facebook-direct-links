@@ -9,9 +9,9 @@ mousedown(document.getElementsByTagName("a"));
 
 
 function mousedown(element) {
-    for(var i=0; i<children.length; i++) {
-	if(children[i].target == "_blank") {
-		children[i].onmousedown = function() { return true; };
+    for(var i=0; i<element.length; i++) {
+	if(element[i].target == "_blank") {
+		element[i].onmousedown = function() { return true; };
 	}
     }
 }
