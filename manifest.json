@@ -2,7 +2,7 @@
   "description": "Remove the redirect page from Facebook's external links",
   "manifest_version": 2,
   "name": "Facebook Direct Links",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "homepage_url": "https://github.com/mte90/facebook-direct-links",
   "icons": {
     "48": "icons/fb-48.png"
