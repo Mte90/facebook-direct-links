@@ -50,7 +50,8 @@
         if (element.getAttribute('target') === "_blank") {
             element.onmousedown = function() {
                 element.href = element.href.replace(/&?fbclid(=|%3D|%3d)[^&#$/]*/gi, '');
-                element.setAttribute("data-lynx-uri", "");return true;
+                element.setAttribute("data-lynx-uri", "");
+                return true;
             };
         }
     });
