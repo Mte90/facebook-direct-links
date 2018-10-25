@@ -48,11 +48,21 @@
 
     ready('a', function(element) {
         if (element.getAttribute('target') === "_blank") {
-            element.onmousedown = function() {
-                element.href = element.href.replace(/&?fbclid(=|%3D|%3d)[^&#$/]*/gi, '');
+            let updateElement = function() {
+                let uri = element.href;
+                if (/^https?:\/\/lm?.facebook.com/i.test(uri)) {
+                    uri = uri.match(/u=([^&#$]+)/i)[1];
+                }
+                uri = decodeURIComponent(uri);
+                uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
+
+                element.href = uri;
                 element.setAttribute("data-lynx-uri", "");
                 return true;
             };
+
+            element.onmousedown = updateElement;
+            element.ontouchstart = updateElement;
         }
     });
 })(this);
