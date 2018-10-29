@@ -62,6 +62,7 @@
             };
 
             element.onmousedown = updateElement;
+            element.contextmenu = updateElement;
             element.ontouchstart = updateElement;
         }
     });
