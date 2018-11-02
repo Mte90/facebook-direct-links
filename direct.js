@@ -47,23 +47,23 @@
     win.ready = ready;
 
     ready('a', function(element) {
-        if (element.getAttribute('target') === "_blank") {
-            let updateElement = function() {
-                let uri = element.href;
-                if (/^https?:\/\/lm?.facebook.com/i.test(uri)) {
-                    uri = uri.match(/u=([^&#$]+)/i)[1];
-                }
-                uri = decodeURIComponent(uri);
-                uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
+        let updateElement = function() {
+            let uri = element.href;
+            if (/^https?:\/\/lm?.facebook.com/i.test(uri)) {
+                uri = uri.match(/u=([^&#$]+)/i)[1];
+            }
+            uri = decodeURIComponent(uri);
+            // Strip all the parameters in URL
+            uri = new URL(uri);
+            uri = uri.protocol + '//' + uri.hostname +  uri.pathname;
 
-                element.href = uri;
-                element.setAttribute("data-lynx-uri", "");
-                return true;
-            };
+            element.href = uri;
+            element.setAttribute("data-lynx-uri", "");
+            return true;
+        };
 
-            element.onmousedown = updateElement;
-            element.contextmenu = updateElement;
-            element.ontouchstart = updateElement;
-        }
+        element.onmousedown = updateElement;
+        element.contextmenu = updateElement;
+        element.ontouchstart = updateElement;
     });
 })(this);
