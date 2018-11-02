@@ -55,15 +55,19 @@
             uri = decodeURIComponent(uri);
             // Strip all the parameters in URL
             uri = new URL(uri);
-            uri = uri.protocol + '//' + uri.hostname +  uri.pathname;
-
+            uri = uri.protocol + '//' + uri.hostname + uri.pathname;
+            
             element.href = uri;
             element.setAttribute("data-lynx-uri", "");
             return true;
         };
 
-        element.onmousedown = updateElement;
-        element.contextmenu = updateElement;
-        element.ontouchstart = updateElement;
+        
+        var pathname = element.href.toString();
+        if (pathname.indexOf('#') === -1) {
+            element.onmousedown = updateElement;
+            element.contextmenu = updateElement;
+            element.ontouchstart = updateElement;
+        }
     });
 })(this);
