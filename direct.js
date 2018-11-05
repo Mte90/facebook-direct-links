@@ -5,7 +5,7 @@
     doc = win.document,
     MutationObserver = win.MutationObserver || win.WebKitMutationObserver,
     observer;
-
+    
     function ready(selector, fn) {
         // Store the selector and callback to be monitored
         listeners.push({
@@ -50,13 +50,22 @@
         // Second level more aggressive
         let updateElement = function() {
             let uri = cleanup();
+            var clean = true;
             
             // Strip all the parameters in URL
             uri = new URL(uri);
-            uri = uri.protocol + '//' + uri.hostname + uri.pathname;
+            var domainfilter= ['facebook.com', 'facebookwww.onion'];
+            domainfilter.forEach(function(element) {
+                if (uri.hostname.toString().indexOf(element) === -1) {
+                    var clean = false;
+                    break;
+                }
+            });
             
-            element.href = uri;
-            return true;
+            if (clean) {
+                uri = uri.protocol + '//' + uri.hostname + uri.pathname;
+                element.href = uri;
+            }
         };
 
         // First level of cleanup
@@ -77,11 +86,11 @@
             return uri;
         }
         
-        var pathname = element.href.toString();
+        var url = element.href.toString();
         var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages'];
         var filter = true;
         whitelist.forEach(function(element) {
-            if (pathname.indexOf(element) !== -1) {
+            if (url.indexOf(element) !== -1) {
                 filter = false;
             }
         });
