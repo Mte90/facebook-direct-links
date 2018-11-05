@@ -57,8 +57,7 @@
             var domainfilter= ['facebook.com', 'facebookwww.onion'];
             domainfilter.forEach(function(element) {
                 if (uri.hostname.toString().indexOf(element) === -1) {
-                    var clean = false;
-                    break;
+                    clean = false;
                 }
             });
             
@@ -80,6 +79,9 @@
             uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
             uri = uri.replace(/&?ref=[^&#$/]*/gi, '');
             uri = uri.replace(/&?ref_type=[^&#$/]*/gi, '');
+            if (uri[uri.length -1] === '?') {
+                uri = uri.substr(0, uri.length-1);
+            }
             
             element.href = uri;
             element.setAttribute("data-lynx-uri", "");
