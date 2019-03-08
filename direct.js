@@ -46,65 +46,65 @@
     // Expose `ready`
     win.ready = ready;
 
-    ready('a', function(element) {
-        // Second level more aggressive
-        let updateElement = function() {
-            let uri = cleanup();
-            var clean = true;
-            
-            // Strip all the parameters in URL
-            uri = new URL(uri);
-            var domainfilter= ['facebook.com', 'facebookwww.onion'];
-            domainfilter.forEach(function(element) {
-                if (uri.hostname.toString().indexOf(element) === -1) {
-                    clean = false;
-                }
-            });
-            
-            if (clean) {
-                uri = uri.protocol + '//' + uri.hostname + uri.pathname;
-                element.href = uri;
-            }
-        };
+  ready('a:not([role]', function(element) {
+    // Second level more aggressive
+    let updateElement = function() {
+      let uri = cleanup();
+      var clean = true;
 
-        // First level of cleanup
-        let cleanup = function() {
-            let uri = element.href;
-            
-            if (/^https?:\/\/lm?.facebook.com/i.test(uri)) {
-                uri = uri.match(/u=([^&#$]+)/i)[1];
-            }
-            
-            uri = decodeURIComponent(uri);
-            uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
-            uri = uri.replace(/&?ref=[^&#$/]*/gi, '');
-            uri = uri.replace(/&?ref_type=[^&#$/]*/gi, '');
-            if (uri[uri.length -1] === '?') {
-                uri = uri.substr(0, uri.length-1);
-            }
-            
-            element.href = uri;
-            element.setAttribute("data-lynx-uri", "");
-            return uri;
+      // Strip all the parameters in URL
+      uri = new URL(uri);
+      var domainfilter= ['facebook.com', 'facebookwww.onion'];
+      domainfilter.forEach(function(element) {
+        if (uri.hostname.toString().indexOf(element) === -1) {
+          clean = false;
         }
-        
-        var url = element.href.toString();
-        var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages'];
-        var filter = true;
-        whitelist.forEach(function(element) {
-            if (url.indexOf(element) !== -1) {
-                filter = false;
-            }
-        });
-        
-        if (filter) {
-            element.onmousedown = updateElement;
-            element.contextmenu = updateElement;
-            element.ontouchstart = updateElement;
-        } else {
-            element.onmousedown = cleanup;
-            element.contextmenu = cleanup;
-            element.ontouchstart = cleanup;
-        }
+      });
+
+      if (clean) {
+        uri = uri.protocol + '//' + uri.hostname + uri.pathname;
+        element.href = uri;
+      }
+    };
+
+    // First level of cleanup
+    let cleanup = function() {
+      let uri = element.href;
+
+      if (/^https?:\/\/lm?.facebook.com/i.test(uri)) {
+        uri = uri.match(/u=([^&#$]+)/i)[1];
+      }
+
+      uri = decodeURIComponent(uri);
+      uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
+      uri = uri.replace(/&?ref=[^&#$/]*/gi, '');
+      uri = uri.replace(/&?ref_type=[^&#$/]*/gi, '');
+      if (uri[uri.length -1] === '?') {
+        uri = uri.substr(0, uri.length-1);
+      }
+
+      element.href = uri;
+      element.setAttribute("data-lynx-uri", "");
+      return uri;
+    }
+
+    var url = element.href.toString();
+    var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages'];
+    var filter = true;
+    whitelist.forEach(function(element) {
+      if (url.indexOf(element) !== -1) {
+        filter = false;
+      }
     });
+
+    if (filter) {
+      element.onmousedown = updateElement;
+      element.contextmenu = updateElement;
+      element.ontouchstart = updateElement;
+    } else {
+      element.onmousedown = cleanup;
+      element.contextmenu = cleanup;
+      element.ontouchstart = cleanup;
+    }
+  });
 })(this);
