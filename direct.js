@@ -2,7 +2,7 @@
     'use strict';
 
     var listeners = [],
-    doc = win.document,
+    mainDoc = win.document,
     MutationObserver = win.MutationObserver || win.WebKitMutationObserver,
     observer;
     
@@ -15,7 +15,7 @@
         if (!observer) {
             // Watch for changes in the document
             observer = new MutationObserver(check);
-            observer.observe(doc.documentElement, {
+            observer.observe(mainDoc.documentElement, {
                 childList: true,
                 subtree: true
             });
@@ -24,7 +24,7 @@
         check();
     }
 
-    function check() {
+    function check(mutationsList, observer, doc = mainDoc) {
         // Check the DOM for elements matching a stored selector
         for (var i = 0, len = listeners.length, listener, elements; i < len; i++) {
             listener = listeners[i];
@@ -46,7 +46,7 @@
     // Expose `ready`
     win.ready = ready;
 
-  ready('a:not([role])', function(element) {
+  ready('a', function (element) {
     // Second level more aggressive
     let updateElement = function() {
       let uri = cleanup();
@@ -110,4 +110,39 @@
       element.ontouchstart = cleanup;
     }
   });
-})(this);
+
+  ready('iframe', function (iframe) {
+    // A new observer for the iframe document
+    var obs = null
+
+    // Create a new observer and call check to update elements
+    var startObserving = d => {
+      obs = new MutationObserver(() => {
+        check(null, null, d)
+      })
+      obs.observe(iframe.contentWindow.document, {childList: true, subtree: true})
+      check(null, null, d)
+    }
+
+    /*
+    Disconnect observer for that iframe
+    but check if the window has been destroyed completely
+    or has been recreated, if so, recreate also the observer
+    */
+    iframe.contentWindow.onunload = () => {
+      if (obs) {
+        obs.disconnect()
+      }
+      // wait for the window to be recreated
+      setTimeout(() => {
+        // If the window has been recreated recreate also the observer
+        if (iframe.contentWindow) {
+          startObserving(iframe.contentWindow.document)
+        }
+      }, 0)
+    }
+
+    // Actually create the observer
+    startObserving(iframe.contentWindow.document)
+  })
+})(this)
