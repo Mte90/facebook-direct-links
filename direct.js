@@ -51,14 +51,13 @@
     let updateElement = function() {
       let uri = cleanup();
       var clean = true;
-      
       if( uri !== '' ) {
         // Strip all the parameters in URL
         uri = new URL(uri);
         var domainfilter= ['facebook.com', 'facebookwww.onion'];
         domainfilter.forEach(function(element) {
             if (uri.hostname.toString().indexOf(element) === -1) {
-            clean = false;
+                clean = false;
             }
         });
 
@@ -67,6 +66,7 @@
             element.href = uri;
         }
       }
+      return uri;
     };
 
     // First level of cleanup
@@ -86,7 +86,6 @@
         }
 
         element.href = uri;
-        element.setAttribute("data-lynx-uri", "");
         return uri;
       }
     }
@@ -99,11 +98,29 @@
         filter = false;
       }
     });
+    
+    let fbclick = function(event) { 
+        event.stopPropagation();
+        uri = updateElement();
+        var domainfilter= ['facebook.com', 'facebookwww.onion'];
+        var ovverride = false;
+        domainfilter.forEach(function(url) {
+            if (uri.indexOf(url) === -1) {
+                ovverride = true;
+            }
+        });
+        
+        if (override) {
+            window.open(uri, '_blank');
+            return false;
+        }
+    }
 
     if (filter) {
       element.onmousedown = updateElement;
       element.contextmenu = updateElement;
       element.ontouchstart = updateElement;
+      element.onclick = fbclick;
     } else {
       element.onmousedown = cleanup;
       element.contextmenu = cleanup;
