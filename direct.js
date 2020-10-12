@@ -93,7 +93,7 @@
     }
 
     var url = element.href.toString();
-    var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages', '&notif_t=feedback_reaction_generic'];
+    var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages', '&notif_t=feedback_reaction_generic', '/photos/', '/photo/'];
     var filter = true;
     whitelist.forEach(function(element) {
       if (url.indexOf(element) !== -1) {
@@ -119,19 +119,10 @@
     }
 
     if (filter) {
-      var domainfilter= ['/photos/', '/photo/'];
-      var ovverride = false;
-      domainfilter.forEach(function(url) {
-        if (uri.indexOf(url) === -1) {
-            ovverride = true;
-        }
-      });
       element.onmousedown = updateElement;
       element.contextmenu = updateElement;
       element.ontouchstart = updateElement;
-      if ( ovverride ) {
-        element.onclick = fbclick;
-      }
+      element.onclick = fbclick;
     } else {
       element.onmousedown = cleanup;
       element.contextmenu = cleanup;
