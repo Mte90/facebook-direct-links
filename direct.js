@@ -80,6 +80,8 @@
         uri = decodeURIComponent(uri);
         uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
         uri = uri.replace(/&?ref=[^&#$/]*/gi, '');
+        uri = uri.replace(/&?__cft__\[0\]=[^&#$/]*/gi, '');
+        uri = uri.replace(/&?__tn__=[^&#$/]*/gi, '');
         uri = uri.replace(/&?ref_type=[^&#$/]*/gi, '');
         if (uri[uri.length -1] === '?') {
             uri = uri.substr(0, uri.length-1);
@@ -117,10 +119,19 @@
     }
 
     if (filter) {
+      var domainfilter= ['/photos/', '/photo/'];
+      var ovverride = false;
+      domainfilter.forEach(function(url) {
+        if (uri.indexOf(url) === -1) {
+            ovverride = true;
+        }
+      });
       element.onmousedown = updateElement;
       element.contextmenu = updateElement;
       element.ontouchstart = updateElement;
-      element.onclick = fbclick;
+      if ( ovverride ) {
+        element.onclick = fbclick;
+      }
     } else {
       element.onmousedown = cleanup;
       element.contextmenu = cleanup;
