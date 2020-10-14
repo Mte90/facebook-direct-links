@@ -93,7 +93,7 @@
     }
 
     var url = element.href.toString();
-    var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages', '&notif_t=feedback_reaction_generic', '/photos/', '/photo/'];
+    var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages', '&notif_t', '/photos/', '/photo/'];
     var filter = true;
     whitelist.forEach(function(element) {
       if (url.indexOf(element) !== -1) {
