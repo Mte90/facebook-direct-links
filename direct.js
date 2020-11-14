@@ -66,7 +66,10 @@
         }
 
         element.href = uri;
-        return uri;
+    }
+
+    let eventBlocker = function(evt) {
+        evt.stopImmediatePropagation();
     }
 
     var url = element.href.toString();
@@ -78,9 +81,12 @@
     var trackerLinkRegex = /^https?:\/\/lm?.(facebook\.com|facebookwww\.onion)\/l.php\?u=([^&#$]+)/i;
 
     if( !domainfilter.includes(domain) || trackerLinkRegex.test(url) ) { //external links
-        element.onmousedown = cleanup;
-        element.contextmenu = cleanup;
-        element.ontouchstart = cleanup;
+        element.addEventListener('click', eventBlocker);
+        element.addEventListener('contextmenu', eventBlocker);
+        element.addEventListener('touchstart', eventBlocker);
+        element.addEventListener('mousedown', eventBlocker);
+        element.addEventListener('mouseup', eventBlocker);
+        cleanup();
     }
   });
 
