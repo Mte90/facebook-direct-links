@@ -82,19 +82,7 @@
     
     let fbclick = function(event) { 
         event.stopPropagation();
-        uri = cleanup();
-        var domainfilter= ['facebook.com', 'facebookwww.onion'];
-        var ovverride = false;
-        domainfilter.forEach(function(url) {
-            if (uri.indexOf(url) === -1) {
-                ovverride = true;
-            }
-        });
-        
-        if (override) {
-            window.open(uri, '_blank');
-            return false;
-        }
+        cleanup();
     }
 
     if (filter) {
