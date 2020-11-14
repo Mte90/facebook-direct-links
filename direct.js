@@ -72,28 +72,15 @@
     var url = element.href.toString();
     if (url === '') return;
 
-    var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages', '&notif_t', '/photos/', '/photo/'];
-    var filter = true;
-    whitelist.forEach(function(element) {
-      if (url.indexOf(element) !== -1) {
-        filter = false;
-      }
-    });
-    
-    let fbclick = function(event) { 
-        event.stopPropagation();
-        cleanup();
-    }
+    var domainfilter= ['facebook.com', 'facebookwww.onion'];
+    var domain = (new URL(url)).hostname.toString()
+                    .split('.').slice(-2).join('.');
+    var trackerLinkRegex = /^https?:\/\/lm?.(facebook\.com|facebookwww\.onion)\/l.php\?u=([^&#$]+)/i;
 
-    if (filter) {
-      element.onmousedown = cleanup;
-      element.contextmenu = cleanup;
-      element.ontouchstart = cleanup;
-      element.onclick = fbclick;
-    } else {
-      element.onmousedown = cleanup;
-      element.contextmenu = cleanup;
-      element.ontouchstart = cleanup;
+    if( !domainfilter.includes(domain) || trackerLinkRegex.test(url) ) { //external links
+        element.onmousedown = cleanup;
+        element.contextmenu = cleanup;
+        element.ontouchstart = cleanup;
     }
   });
 
