@@ -47,28 +47,6 @@
     win.ready = ready;
 
   ready('a', function (element) {
-    // Second level more aggressive
-    let updateElement = function() {
-      let uri = cleanup();
-      var clean = true;
-      if( uri !== '' ) {
-        // Strip all the parameters in URL
-        uri = new URL(uri);
-        var domainfilter= ['facebook.com', 'facebookwww.onion'];
-        domainfilter.forEach(function(element) {
-            if (uri.hostname.toString().indexOf(element) === -1) {
-                clean = false;
-            }
-        });
-
-        if (clean) {
-            uri = uri.protocol + '//' + uri.hostname + uri.pathname;
-            element.href = uri;
-        }
-      }
-      return uri;
-    };
-
     // First level of cleanup
     let cleanup = function() {
       let uri = element.href;
@@ -103,7 +81,7 @@
     
     let fbclick = function(event) { 
         event.stopPropagation();
-        uri = updateElement();
+        uri = cleanup();
         var domainfilter= ['facebook.com', 'facebookwww.onion'];
         var ovverride = false;
         domainfilter.forEach(function(url) {
@@ -119,9 +97,9 @@
     }
 
     if (filter) {
-      element.onmousedown = updateElement;
-      element.contextmenu = updateElement;
-      element.ontouchstart = updateElement;
+      element.onmousedown = cleanup;
+      element.contextmenu = cleanup;
+      element.ontouchstart = cleanup;
       element.onclick = fbclick;
     } else {
       element.onmousedown = cleanup;
