@@ -49,8 +49,8 @@
   ready('a', function (element) {
     // First level of cleanup
     let cleanup = function() {
-      let uri = element.href;
-      if( uri !== '' ) {
+        let uri = element.href;
+
         if (/^https?:\/\/lm?.facebook.com/i.test(uri)) {
             uri = uri.match(/u=([^&#$]+)/i)[1];
         }
@@ -67,10 +67,11 @@
 
         element.href = uri;
         return uri;
-      }
     }
 
     var url = element.href.toString();
+    if (url === '') return;
+
     var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages', '&notif_t', '/photos/', '/photo/'];
     var filter = true;
     whitelist.forEach(function(element) {
