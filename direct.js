@@ -46,122 +46,82 @@
     // Expose `ready`
     win.ready = ready;
 
-  ready('a', function (element) {
-    // Second level more aggressive
-    let updateElement = function() {
-      let uri = cleanup();
-      var clean = true;
-      if( uri !== '' ) {
-        // Strip all the parameters in URL
-        uri = new URL(uri);
-        var domainfilter= ['facebook.com', 'facebookwww.onion'];
-        domainfilter.forEach(function(element) {
-            if (uri.hostname.toString().indexOf(element) === -1) {
-                clean = false;
-            }
-        });
+    ready('a', function (element) {
+        let cleanup = function() {
+            let uri = element.href;
 
-        if (clean) {
-            uri = uri.protocol + '//' + uri.hostname + uri.pathname;
+            if (/^https?:\/\/lm?.facebook.com/i.test(uri)) {
+                uri = uri.match(/u=([^&#$]+)/i)[1];
+            }
+
+            uri = decodeURIComponent(uri);
+            uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?ref=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?__cft__\[0\]=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?__tn__=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?ref_type=[^&#$/]*/gi, '');
+            if (uri[uri.length -1] === '?') {
+                uri = uri.substr(0, uri.length-1);
+            }
+
             element.href = uri;
         }
-      }
-      return uri;
-    };
 
-    // First level of cleanup
-    let cleanup = function() {
-      let uri = element.href;
-      if( uri !== '' ) {
-        if (/^https?:\/\/lm?.facebook.com/i.test(uri)) {
-            uri = uri.match(/u=([^&#$]+)/i)[1];
+        let eventBlocker = function(evt) {
+            cleanup();
+            evt.stopImmediatePropagation();
         }
 
-        uri = decodeURIComponent(uri);
-        uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
-        uri = uri.replace(/&?ref=[^&#$/]*/gi, '');
-        uri = uri.replace(/&?__cft__\[0\]=[^&#$/]*/gi, '');
-        uri = uri.replace(/&?__tn__=[^&#$/]*/gi, '');
-        uri = uri.replace(/&?ref_type=[^&#$/]*/gi, '');
-        if (uri[uri.length -1] === '?') {
-            uri = uri.substr(0, uri.length-1);
-        }
+        var url = element.href.toString();
+        if (url === '') return;
 
-        element.href = uri;
-        return uri;
-      }
-    }
-
-    var url = element.href.toString();
-    var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages', '&notif_t', '/photos/', '/photo/'];
-    var filter = true;
-    whitelist.forEach(function(element) {
-      if (url.indexOf(element) !== -1) {
-        filter = false;
-      }
-    });
-    
-    let fbclick = function(event) { 
-        event.stopPropagation();
-        uri = updateElement();
         var domainfilter= ['facebook.com', 'facebookwww.onion'];
-        var ovverride = false;
-        domainfilter.forEach(function(url) {
-            if (uri.indexOf(url) === -1) {
-                ovverride = true;
+        var domain = (new URL(url)).hostname.toString()
+                        .split('.').slice(-2).join('.');
+        var trackerLinkRegex = /^https?:\/\/lm?.(facebook\.com|facebookwww\.onion)\/l.php\?u=([^&#$]+)/i;
+
+        if( !domainfilter.includes(domain) || trackerLinkRegex.test(url) ) { //external links
+            element.addEventListener('click', eventBlocker);
+            element.addEventListener('contextmenu', eventBlocker);
+            element.addEventListener('touchstart', eventBlocker);
+            element.addEventListener('mousedown', eventBlocker);
+            element.addEventListener('mouseup', eventBlocker);
+            cleanup();
+        }
+    });
+
+    ready('iframe', function (iframe) {
+        // A new observer for the iframe document
+        var obs = null
+
+        // Create a new observer and call check to update elements
+        var startObserving = d => {
+            obs = new MutationObserver(() => {
+                check(null, null, d)
+            })
+            obs.observe(iframe.contentWindow.document, {childList: true, subtree: true})
+            check(null, null, d)
+        }
+
+        /*
+        Disconnect observer for that iframe
+        but check if the window has been destroyed completely
+        or has been recreated, if so, recreate also the observer
+        */
+        iframe.contentWindow.onunload = () => {
+            if (obs) {
+                obs.disconnect()
             }
-        });
-        
-        if (override) {
-            window.open(uri, '_blank');
-            return false;
+            // wait for the window to be recreated
+            setTimeout(() => {
+                // If the window has been recreated recreate also the observer
+                if (iframe.contentWindow) {
+                    startObserving(iframe.contentWindow.document)
+                }
+            }, 0)
         }
-    }
 
-    if (filter) {
-      element.onmousedown = updateElement;
-      element.contextmenu = updateElement;
-      element.ontouchstart = updateElement;
-      element.onclick = fbclick;
-    } else {
-      element.onmousedown = cleanup;
-      element.contextmenu = cleanup;
-      element.ontouchstart = cleanup;
-    }
-  });
-
-  ready('iframe', function (iframe) {
-    // A new observer for the iframe document
-    var obs = null
-
-    // Create a new observer and call check to update elements
-    var startObserving = d => {
-      obs = new MutationObserver(() => {
-        check(null, null, d)
-      })
-      obs.observe(iframe.contentWindow.document, {childList: true, subtree: true})
-      check(null, null, d)
-    }
-
-    /*
-    Disconnect observer for that iframe
-    but check if the window has been destroyed completely
-    or has been recreated, if so, recreate also the observer
-    */
-    iframe.contentWindow.onunload = () => {
-      if (obs) {
-        obs.disconnect()
-      }
-      // wait for the window to be recreated
-      setTimeout(() => {
-        // If the window has been recreated recreate also the observer
-        if (iframe.contentWindow) {
-          startObserving(iframe.contentWindow.document)
-        }
-      }, 0)
-    }
-
-    // Actually create the observer
-    startObserving(iframe.contentWindow.document)
-  })
+        // Actually create the observer
+        startObserving(iframe.contentWindow.document)
+    })
 })(this)
