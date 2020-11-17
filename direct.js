@@ -68,6 +68,7 @@
         }
 
         let eventBlocker = function(evt) {
+            cleanup();
             evt.stopImmediatePropagation();
         }
 
