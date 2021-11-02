@@ -60,6 +60,8 @@
             uri = uri.replace(/&?fb_action_types=[^&#$/]*/gi, '');
             uri = uri.replace(/&?fb_source=[^&#$/]*/gi, '');
             uri = uri.replace(/&?fb_ref=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?ga_[^&#$/]*=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?utm_[^&#$/]*=[^&#$/]*/gi, '');
             uri = uri.replace(/&?ref=[^&#$/]*/gi, '');
             uri = uri.replace(/&?__cft__\[0\]=[^&#$/]*/gi, '');
             uri = uri.replace(/&?__tn__=[^&#$/]*/gi, '');
