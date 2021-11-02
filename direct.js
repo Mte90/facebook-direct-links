@@ -56,6 +56,10 @@
 
             uri = decodeURIComponent(uri);
             uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?fb_action_ids=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?fb_action_types=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?fb_source=[^&#$/]*/gi, '');
+            uri = uri.replace(/&?fb_ref=[^&#$/]*/gi, '');
             uri = uri.replace(/&?ref=[^&#$/]*/gi, '');
             uri = uri.replace(/&?__cft__\[0\]=[^&#$/]*/gi, '');
             uri = uri.replace(/&?__tn__=[^&#$/]*/gi, '');
