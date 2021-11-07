@@ -81,10 +81,10 @@
         var url = element.href.toString();
         if (url === '') return;
 
-        var domainfilter= ['facebook.com', 'facebookwww.onion'];
+        var domainfilter= ['facebook.com', 'facebookwww.onion', 'facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd.onion'];
         var domain = (new URL(url)).hostname.toString()
                         .split('.').slice(-2).join('.');
-        var trackerLinkRegex = /^https?:\/\/lm?.(facebook\.com|facebookwww\.onion)\/l.php\?u=([^&#$]+)/i;
+        var trackerLinkRegex = /^https?:\/\/lm?.(facebook\.com|facebookwww\.onion|facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd\.onion)\/l.php\?u=([^&#$]+)/i;
 
         if( !domainfilter.includes(domain) || trackerLinkRegex.test(url) ) { //external links
             element.addEventListener('click', eventBlocker);
