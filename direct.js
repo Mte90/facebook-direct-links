@@ -66,6 +66,10 @@
             uri = uri.replace(/([&|?])__cft__\[0\]=[^&#$/]*/gi, '$1');
             uri = uri.replace(/([&|?])__tn__=[^&#$/]*/gi, '$1');
             uri = uri.replace(/([&|?])ref_type=[^&#$/]*/gi, '$1');
+
+            // Additional `&` clean up
+            uri = uri.replace(/([&|?])(&+)/gi, '$1');
+
             if (uri[uri.length -1] === '?') {
                 uri = uri.substr(0, uri.length-1);
             }
