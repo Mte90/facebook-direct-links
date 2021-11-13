@@ -55,17 +55,17 @@
             }
 
             uri = decodeURIComponent(uri);
-            uri = uri.replace(/([&|?])fbclid=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])fb_action_ids=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])fb_action_types=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])fb_source=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])fb_ref=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])ga_[^&#$/]*=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])utm_[^&#$/]*=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])ref=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])__cft__\[0\]=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])__tn__=[^&#$/]*/gi, '');
-            uri = uri.replace(/([&|?])ref_type=[^&#$/]*/gi, '');
+            uri = uri.replace(/([&|?])fbclid=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])fb_action_ids=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])fb_action_types=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])fb_source=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])fb_ref=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])ga_[^&#$/]*=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])utm_[^&#$/]*=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])ref=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])__cft__\[0\]=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])__tn__=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])ref_type=[^&#$/]*/gi, '$1');
             if (uri[uri.length -1] === '?') {
                 uri = uri.substr(0, uri.length-1);
             }
