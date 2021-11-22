@@ -47,7 +47,7 @@
     win.ready = ready;
 
     ready('a', function (element) {
-        let cleanup = function() {
+        let externalCleanup = function() {
             let uri = element.href;
 
             if (/^https?:\/\/lm?.facebook.com/i.test(uri)) {
@@ -77,8 +77,31 @@
             element.href = uri;
         }
 
-        let eventBlocker = function(evt) {
-            cleanup();
+        let internalCleanup = function() {
+            let uri = element.href;
+
+            uri = decodeURIComponent(uri);
+            uri = uri.replace(/([&|?])__cft__\[0\]=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])__tn__=[^&#$/]*/gi, '$1');
+            uri = uri.replace(/([&|?])__eep__=[^&#$/]*/gi, '$1');
+
+            // Additional `&` clean up
+            uri = uri.replace(/([&|?])(&+)/gi, '$1');
+
+            if (uri[uri.length -1] === '?') {
+                uri = uri.substr(0, uri.length-1);
+            }
+
+            element.href = uri;
+        }
+
+        let eventBlockerForExtLinks = function(evt) {
+            externalCleanup();
+            evt.stopImmediatePropagation();
+        }
+
+        let eventBlockerForIntLinks = function(evt) {
+            externalCleanup();
             evt.stopImmediatePropagation();
         }
 
@@ -91,12 +114,19 @@
         var trackerLinkRegex = /^https?:\/\/lm?.(facebook\.com|facebookwww\.onion|facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd\.onion)\/l.php\?u=([^&#$]+)/i;
 
         if( !domainfilter.includes(domain) || trackerLinkRegex.test(url) ) { //external links
-            element.addEventListener('click', eventBlocker);
-            element.addEventListener('contextmenu', eventBlocker);
-            element.addEventListener('touchstart', eventBlocker);
-            element.addEventListener('mousedown', eventBlocker);
-            element.addEventListener('mouseup', eventBlocker);
-            cleanup();
+            element.addEventListener('click', eventBlockerForExtLinks);
+            element.addEventListener('contextmenu', eventBlockerForExtLinks);
+            element.addEventListener('touchstart', eventBlockerForExtLinks);
+            element.addEventListener('mousedown', eventBlockerForExtLinks);
+            element.addEventListener('mouseup', eventBlockerForExtLinks);
+            externalCleanup();
+        } else {
+            element.addEventListener('click', eventBlockerForIntLinks);
+            element.addEventListener('contextmenu', eventBlockerForIntLinks);
+            element.addEventListener('touchstart', eventBlockerForIntLinks);
+            element.addEventListener('mousedown', eventBlockerForIntLinks);
+            element.addEventListener('mouseup', eventBlockerForIntLinks);
+            internalCleanup();
         }
     });
 
