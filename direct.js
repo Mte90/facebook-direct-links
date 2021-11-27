@@ -70,7 +70,7 @@
             // Additional `&` clean up
             uri = uri.replace(/([&|?])(&+)/gi, '$1');
 
-            if (uri[uri.length -1] === '?') {
+            if (uri[uri.length -1] === '?' || uri[uri.length -1] === '&') {
                 uri = uri.substr(0, uri.length-1);
             }
 
