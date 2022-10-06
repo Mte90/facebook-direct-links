@@ -9,7 +9,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.facebook.com/*", "*://*.facebookcorewwwi.onion/*", "*://*.facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd.onion/*"],
+      "matches": ["*://*.facebook.com/*", "*://*.facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd.onion/*"],
       "js": ["direct.js"]
     }
   ]
