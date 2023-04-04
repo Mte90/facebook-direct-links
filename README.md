@@ -3,6 +3,8 @@
 
 This extension is based on the code of a Greasemonkey script by [Phillip Berndt](http://www.pberndt.com/) and ported as WebExtensions with other features.
 
+**NOTE: A April 2023, Facebook change a lot about the link tracking. Now is doing the majority server side so the extension works only on external links that are written the post, not the one in the preview.**
+
 # What
 
 In every external link on Facebook there is link with a redirect and is very boring other than they track you.  
